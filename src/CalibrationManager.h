@@ -1,33 +1,31 @@
-#pragma once
-
-/* CalibrationManager library by Markus Kreitzer
- */
-
-// This will load the definition for common Particle variable types
 #include "Particle.h"
 
-// This is your main class that users will import into their application
-class CalibrationManager
-{
-public:
-  /**
-   * Constructor
-   */
-  CalibrationManager();
+typedef struct Sensor {
+    char id[24];
+    int sensor_num;
+    float temp[2];
+    float y0[2];
+    float y100[2];
+};
 
-  /**
-   * Example method
-   */
-  void begin();
+// struct CalibrationData {
+//     float moist_calibration_constants[4];
+//     float temp_calibration_constants[2];
+//     int version;
+// };
 
-  /**
-   * Example method
-   */
-  void process();
+class CalibrationManager{
+  public:
+    CalibrationManager();
 
-private:
-  /**
-   * Example private method
-   */
-  void doit();
+  private:
+    const int begin = 0;
+    const int end = EEPROM.length()-1;
+    //float calibration_values_moist[4] = { -0.2744, 17645.0, 0.979, 109.22 };
+    //float calibration_values_temp[2] = {0.0044, 7.6176};
+    // struct CalibrationData cal_data;
+    Sensor sensor;
+    int get_calibration_parameters();
+    int convert_args(String *command);
+    int update_values(String command);
 };

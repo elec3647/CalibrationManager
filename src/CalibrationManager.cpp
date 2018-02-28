@@ -1,39 +1,31 @@
-/* CalibrationManager library by Markus Kreitzer
- */
-
+#include "Particle.h"
 #include "CalibrationManager.h"
 
-/**
- * Constructor.
- */
-CalibrationManager::CalibrationManager()
-{
-  // be sure not to call anything that requires hardware be initialized here, put those in begin()
+CalibrationManager::CalibrationManager(){
+    //Particle.function("calibrate", &CalibrationManager::update_values, this);
+    begin = 0;
 }
 
-/**
- * Example method.
- */
-void CalibrationManager::begin()
-{
-    // initialize hardware
-    Serial.println("called begin");
+int CalibrationManager::get_calibration_parameters(){
+    EEPROM.get(this->address, this->sensor);
+    if(this->sensor.id == 0xFF){
+        return false;
+    }else{
+        return true;
+    }
 }
 
-/**
- * Example method.
- */
-void CalibrationManager::process()
-{
-    // do something useful
-    Serial.println("called process");
-    doit();
+int CalibrationManager::convert_args(String *command){
+    uint len = command->length();
+    char *buf = (char*) malloc(len+1);
+    command->toCharArray(buf,len);
+    scanf(buf, "%f,%f,%f,%f,%f,%f,%d", &this->cal_data);
+    free(buf);
+    return true;
 }
 
-/**
-* Example private method
-*/
-void CalibrationManager::doit()
-{
-    Serial.println("called doit");
+int CalibrationManager::update_values(String command) {
+    //this->convert_args(command);
+    EEPROM.put(this->address, this->cal_data);
+    return 0;
 }
