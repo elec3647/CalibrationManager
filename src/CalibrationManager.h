@@ -15,6 +15,7 @@ typedef struct Sensor {
 //     int version;
 // };
 
+
 class CalibrationManager{
   public:
     CalibrationManager();
